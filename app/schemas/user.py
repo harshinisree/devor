@@ -11,4 +11,5 @@ class UserOut(BaseModel):
     email: str
     role: str
     is_active: bool
+    is_approved: bool
     created_at: datetime
