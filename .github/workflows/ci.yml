@@ -35,7 +35,7 @@ jobs:
       ENV: test
       DATABASE_URL: postgresql+asyncpg://devor:devor@localhost:5432/devor
       REDIS_URL: redis://localhost:6379/0
-      JWT_SECRET: ci-only-secret
+      JWT_SECRET: ci-only-secret-not-for-production-use-0123456789
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

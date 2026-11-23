@@ -6,10 +6,14 @@ from redis.asyncio import Redis
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.v1.router import api_router
+from app.core.errors import register_error_handlers
 from app.core.redis import get_redis
 from app.db.session import get_session
 
 app = FastAPI(title="Devor")
+register_error_handlers(app)
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/", include_in_schema=False)

@@ -8,3 +8,4 @@ pyjwt
 bcrypt
 redis
 apscheduler
+email-validator
