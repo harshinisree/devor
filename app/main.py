@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import Depends, FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from redis.asyncio import Redis
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +10,16 @@ from app.core.redis import get_redis
 from app.db.session import get_session
 
 app = FastAPI(title="Devor")
+
+
+@app.get("/", include_in_schema=False)
+async def root() -> RedirectResponse:
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/livez")
+async def livez() -> dict[str, str]:
+    return {"status": "ok"}
 
 
 @app.get("/health")
