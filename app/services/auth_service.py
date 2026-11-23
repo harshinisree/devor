@@ -20,9 +20,22 @@ class AuthService:
         self.users = UserRepository(session)
 
     async def register(self, email: str, password: str, role: str) -> User:
+        # Customers are auto-approved; owners and partners wait for an admin.
+        return await self._create_user(email, password, role, is_approved=role == "customer")
+
+    async def create_admin(self, email: str, password: str) -> User:
+        """Only reachable from the CLI, never from an API route."""
+        return await self._create_user(email, password, "admin", is_approved=True)
+
+    async def _create_user(self, email: str, password: str, role: str, is_approved: bool) -> User:
         # bcrypt is CPU-bound; keep it off the event loop.
         password_hash = await asyncio.to_thread(hash_password, password)
-        user = User(email=normalize_email(email), password_hash=password_hash, role=role)
+        user = User(
+            email=normalize_email(email),
+            password_hash=password_hash,
+            role=role,
+            is_approved=is_approved,
+        )
         try:
             await self.users.add(user)
             await self.session.commit()

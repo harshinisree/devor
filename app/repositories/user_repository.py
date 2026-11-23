@@ -17,6 +17,15 @@ class UserRepository:
         result = await self.session.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
+    async def list_pending(self) -> list[User]:
+        """Owners and partners still waiting for approval, oldest first."""
+        result = await self.session.execute(
+            select(User)
+            .where(User.role.in_(("owner", "partner")), User.is_approved.is_(False))
+            .order_by(User.created_at, User.id)
+        )
+        return list(result.scalars().all())
+
     async def add(self, user: User) -> User:
         """Stage the user and flush; raises IntegrityError on a duplicate email."""
         self.session.add(user)

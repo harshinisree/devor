@@ -27,6 +27,13 @@ async def get_current_user(
     return user
 
 
+async def require_approved(user: User = Depends(get_current_user)) -> User:
+    """Use on owner/partner routes: they can log in before approval but can't act."""
+    if not user.is_approved:
+        raise AppError(403, "not_approved", "Your account is awaiting admin approval")
+    return user
+
+
 def require_role(*roles: str) -> Callable[..., Awaitable[User]]:
     async def checker(user: User = Depends(get_current_user)) -> User:
         if user.role not in roles:
