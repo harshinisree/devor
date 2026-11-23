@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     REDIS_URL: str
     JWT_SECRET: str
     ENV: str = "development"
+    ACCESS_TOKEN_MINUTES: int = 15
+    REFRESH_TOKEN_DAYS: int = 7
 
 
 settings = Settings()
